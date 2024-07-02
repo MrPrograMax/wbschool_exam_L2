@@ -1,5 +1,12 @@
 package main
 
+import (
+	"fmt"
+	"strconv"
+	"strings"
+	"unicode"
+)
+
 /*
 === Задача на распаковку ===
 
@@ -19,5 +26,36 @@ package main
 */
 
 func main() {
+	fmt.Println(UnpackString("a4bc2d5e"))
+	fmt.Println(UnpackString("abcd"))
+	fmt.Println(UnpackString("45"))
+	fmt.Println(UnpackString(""))
 
+}
+
+func UnpackString(str string) string {
+	var resultSb strings.Builder
+	var curLetter rune
+
+	for _, v := range []rune(str) {
+		if unicode.IsLetter(v) {
+			resultSb.WriteRune(v)
+			curLetter = v
+		} else if unicode.IsDigit(v) {
+			count, err := strconv.Atoi(string(v))
+			if err != nil {
+				return ""
+			}
+
+			if curLetter == 0 {
+				return ""
+			}
+
+			for i := 0; i < count-1; i++ {
+				resultSb.WriteRune(curLetter)
+			}
+		}
+	}
+
+	return resultSb.String()
 }
